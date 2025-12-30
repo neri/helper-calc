@@ -54,14 +54,10 @@ class App {
         }
 
         try {
-            const { min, max } = estimateLoans(points, hours);
-            if (min === max) {
-                resultDiv.textContent = `推定貸し出し回数: ${min}回`;
-            } else {
-                resultDiv.textContent = `推定貸し出し回数: ${min}〜${max}回`;
-            }
+            const loans = estimateLoans(points, hours);
+            resultDiv.textContent = `推定貸し出し回数: ${loans}回`;
         } catch (error) {
-            resultDiv.textContent = '計算エラー: ' + (error as Error).message;
+            resultDiv.textContent = (error as Error).message;
         }
     }
 }

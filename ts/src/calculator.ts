@@ -1,4 +1,4 @@
-export function estimateLoans(points: number, hours: number): { min: number, max: number } {
+export function estimateLoans(points: number, hours: number): number {
     if (points < 0 || hours < 0) {
         throw new Error('Invalid input: points and hours must be non-negative');
     }
@@ -16,15 +16,8 @@ export function estimateLoans(points: number, hours: number): { min: number, max
 
     // 入力報酬が範囲内なら確定
     if (points >= minReward && points <= maxReward) {
-        return { min: lowerLoans, max: lowerLoans };
+        return lowerLoans;
+    } else {
+        throw new Error('測定不能');
     }
-
-    // 範囲外なら従来の min/max を計算
-    const pointsFromTimeMin = minMinutes * 20;
-    const pointsFromTimeMax = maxMinutes * 20;
-
-    const minLoans = Math.max(0, Math.floor((points - pointsFromTimeMax) / loanPoints));
-    const maxLoans = Math.max(0, Math.floor((points - pointsFromTimeMin) / loanPoints));
-
-    return { min: minLoans, max: maxLoans };
 }
