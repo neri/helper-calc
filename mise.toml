@@ -1,0 +1,12 @@
+[tasks.server]
+description = "Run a server"
+run = "(cd ts; pnpm run dev)"
+
+[tasks.build]
+description = "Build"
+run = "(cd ts; pnpm i; pnpm run build)"
+
+[tasks.update]
+confirm = "Are you ok?"
+description = "Update dependencies"
+run = "(cd ts; pnpm update)"
