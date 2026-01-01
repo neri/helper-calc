@@ -11,12 +11,12 @@ class App {
       <h1>助っ人貸出回数計算機</h1>
       <div id="calc-form">
         <div>
-          <label for="points">現在の報酬:</label>
-          <input type="number" id="points" min="0">
+          <label for="hours">登録時間:</label>
+          <input type="number" id="hours" min="0">
         </div>
         <div>
-          <label for="hours">経過時間 (時間):</label>
-          <input type="number" id="hours" min="0">
+          <label for="points">獲得報酬:</label>
+          <input type="number" id="points" min="0">
         </div>
       </div>
       <div id="result"></div>
@@ -54,8 +54,12 @@ class App {
         }
 
         try {
-            const loans = estimateLoans(points, hours);
-            resultDiv.textContent = `推定貸し出し回数: ${loans}回`;
+            const { timeReward, loans, loanReward } = estimateLoans(points, hours);
+            resultDiv.innerHTML = `
+                <div class="result-loans">編成回数（推定）: ${loans.toLocaleString()}回</div>
+                <p>登録時間報酬: ${timeReward.toLocaleString()}</p>
+                <p>編成回数報酬: ${loanReward.toLocaleString()}</p>
+            `;
         } catch (error) {
             resultDiv.textContent = (error as Error).message;
         }
