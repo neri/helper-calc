@@ -1,6 +1,8 @@
 import { estimateLoans } from './calculator';
 
 class App {
+    private debounceTimer: number | null = null;
+
     constructor() {
         this.init();
     }
@@ -28,8 +30,17 @@ class App {
         const pointsInput = document.querySelector('#points') as HTMLInputElement;
         const hoursInput = document.querySelector('#hours') as HTMLInputElement;
 
-        pointsInput.addEventListener('input', () => this.calculate());
-        hoursInput.addEventListener('input', () => this.calculate());
+        const debouncedCalculate = () => {
+            if (this.debounceTimer) {
+                clearTimeout(this.debounceTimer);
+            }
+            this.debounceTimer = window.setTimeout(() => {
+                this.calculate();
+            }, 500);
+        };
+
+        pointsInput.addEventListener('input', debouncedCalculate);
+        hoursInput.addEventListener('input', debouncedCalculate);
     }
 
     calculate() {
