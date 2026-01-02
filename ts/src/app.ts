@@ -1,4 +1,5 @@
 import { estimateLoans } from './calculator';
+import { NegativeLoanError } from './calculator';
 
 class App {
     private debounceTimer: number | null = null;
@@ -147,7 +148,7 @@ class App {
             `;
         } catch (error) {
             const err = error as Error;
-            if (err.message === '貸出回数が負です') {
+            if (error instanceof NegativeLoanError) {
                 resultDiv.textContent = '';
             } else {
                 resultDiv.textContent = err.message;

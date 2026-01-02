@@ -1,6 +1,27 @@
+export class InvalidInputError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'InvalidInputError';
+    }
+}
+
+export class NegativeLoanError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'NegativeLoanError';
+    }
+}
+
+export class OutOfRangeError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'OutOfRangeError';
+    }
+}
+
 export function estimateLoans(points: number, timeInMinutes: number, isDatetimeMode: boolean = false): { timeReward: number, loans: number, loanReward: number } {
     if (points < 0 || timeInMinutes < 0) {
-        throw new Error('Invalid input: points and time must be non-negative');
+        throw new InvalidInputError('Invalid input: points and time must be non-negative');
     }
 
     const minMinutes = timeInMinutes;
@@ -11,7 +32,7 @@ export function estimateLoans(points: number, timeInMinutes: number, isDatetimeM
     const loans = Math.floor((points - minMinutes * 20) / loanPoints);
 
     if (loans < 0) {
-        throw new Error('貸出回数が負です');
+        throw new NegativeLoanError('貸出回数が負です');
     }
 
     // 時間報酬 = 獲得報酬 - (貸出回数 * 50000)
@@ -27,6 +48,6 @@ export function estimateLoans(points: number, timeInMinutes: number, isDatetimeM
     if (points <= maxReward) {
         return { timeReward, loans, loanReward };
     } else {
-        throw new Error('獲得報酬の値が計算範囲外です');
+        throw new OutOfRangeError('獲得報酬の値が計算範囲外です');
     }
 }
