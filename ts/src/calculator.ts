@@ -1,10 +1,10 @@
-export function estimateLoans(points: number, hours: number): { timeReward: number, loans: number, loanReward: number } {
-    if (points < 0 || hours < 0) {
-        throw new Error('Invalid input: points and hours must be non-negative');
+export function estimateLoans(points: number, timeInMinutes: number, isDatetimeMode: boolean = false): { timeReward: number, loans: number, loanReward: number } {
+    if (points < 0 || timeInMinutes < 0) {
+        throw new Error('Invalid input: points and time must be non-negative');
     }
 
-    const minMinutes = hours * 60;
-    const maxMinutes = hours * 60 + 59;
+    const minMinutes = timeInMinutes;
+    const maxMinutes = timeInMinutes + (isDatetimeMode ? 10 : 59);
     const loanPoints = 50000;
 
     // 推定貸出回数の下限を算出 (最小時間で計算)
