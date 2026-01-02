@@ -29,7 +29,7 @@ describe('estimateLoans', () => {
     });
 
     test('エラーケース: 登録時間=1, 獲得報酬=100,000 (範囲外)', () => {
-        expect(() => estimateLoans(100000, 1)).toThrow('測定不能');
+        expect(() => estimateLoans(100000, 1)).toThrow('獲得報酬の値が計算範囲外です');
     });
 
     test('正常ケース: 登録時間=0, 獲得報酬=0', () => {

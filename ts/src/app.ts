@@ -72,7 +72,12 @@ class App {
                 <p>編成回数報酬: ${loanReward.toLocaleString()}</p>
             `;
         } catch (error) {
-            resultDiv.textContent = (error as Error).message;
+            const err = error as Error;
+            if (err.message === '貸出回数が負です') {
+                resultDiv.textContent = '';
+            } else {
+                resultDiv.textContent = err.message;
+            }
         }
     }
 }
