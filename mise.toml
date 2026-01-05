@@ -6,6 +6,10 @@ run = "(cd ts; pnpm run dev)"
 description = "Build"
 run = "(cd ts; pnpm i; pnpm run build)"
 
+[tasks.test]
+description = "Run the test"
+run = "(cd ts; pnpm i; pnpm test)"
+
 [tasks.update]
 confirm = "Are you ok?"
 description = "Update dependencies"
