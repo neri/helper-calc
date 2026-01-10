@@ -1,18 +1,18 @@
-import { estimateLoans } from './calculator';
-import { NegativeLoanError } from './calculator';
+import HelperCalcApp from './helper-calc-app';
+import DummyApp from './dummy-app';
+import { SubApp } from './sub-app';
 
 class App {
-    private debounceTimer: number | null = null;
+    private currentApp: SubApp | null = null;
+    private appContainer: HTMLElement;
 
     constructor() {
+        this.appContainer = document.querySelector('#app')!;
         this.init();
     }
 
     init() {
-        const savedMode = localStorage.getItem('input-mode') || 'hours';
-        const savedHours = localStorage.getItem('hours') || '';
-        const savedDatetime = localStorage.getItem('datetime') || '';
-        const app = document.querySelector('#app')!;
+        const savedApp = localStorage.getItem('current-app') || 'calculator';
         document.body.insertAdjacentHTML('afterbegin', `
             <div class="title-bar">
                 <button class="hamburger-menu" id="hamburger-btn">
@@ -20,81 +20,19 @@ class App {
                     <span></span>
                     <span></span>
                 </button>
-                <h2>助っ人貸出回数計算機</h2>
+                <h2 id="app-title">アプリスイッチャー</h2>
                 <div class="app-menu" id="app-menu">
-                    <div class="menu-item active" data-app="current">助っ人貸出回数計算機</div>
-                    <div class="menu-item" data-app="tbd">他のアプリ (TBD)</div>
+                    <div class="menu-item ${savedApp === 'calculator' ? 'active' : ''}" data-app="calculator">助っ人貸出回数計算機</div>
+                    <div class="menu-item ${savedApp === 'dummy' ? 'active' : ''}" data-app="dummy">ダミーアプリ</div>
                 </div>
             </div>
         `);
-        app.innerHTML = `
-      <div id="calc-form">
-        <div id="mode-selection">
-          <label><input type="radio" name="input-mode" value="hours" ${savedMode === 'hours' ? 'checked' : ''}> 登録時間</label>
-          <label><input type="radio" name="input-mode" value="datetime" ${savedMode === 'datetime' ? 'checked' : ''}> 設定日時</label>
-        </div>
-        <div id="hours-input" ${savedMode === 'datetime' ? 'style="display: none;"' : ''}>
-          <label for="hours">登録時間:</label>
-          <input type="number" id="hours" min="0" value="${savedHours}">
-        </div>
-        <div id="datetime-input" ${savedMode === 'hours' ? 'style="display: none;"' : ''}>
-          <label for="datetime">設定日時:</label>
-          <input type="datetime-local" id="datetime" value="${savedDatetime}">
-        </div>
-        <div>
-          <label for="points">獲得報酬:</label>
-          <input type="number" id="points" min="0">
-        </div>
-      </div>
-      <div id="result"></div>
-    `;
+        this.appContainer.innerHTML = '<div id="sub-app-container"></div>';
         this.bindEvents();
+        this.switchApp(savedApp);
     }
 
     bindEvents() {
-        const pointsInput = document.querySelector('#points') as HTMLInputElement;
-        const hoursInput = document.querySelector('#hours') as HTMLInputElement;
-        const datetimeInput = document.querySelector('#datetime') as HTMLInputElement;
-        const modeRadios = document.querySelectorAll('input[name="input-mode"]') as NodeListOf<HTMLInputElement>;
-
-        const saveToLocalStorage = () => {
-            const selectedMode = (document.querySelector('input[name="input-mode"]:checked') as HTMLInputElement).value;
-            localStorage.setItem('input-mode', selectedMode);
-            localStorage.setItem('hours', hoursInput.value);
-            localStorage.setItem('datetime', datetimeInput.value);
-        };
-
-        const debouncedCalculate = () => {
-            if (this.debounceTimer) {
-                clearTimeout(this.debounceTimer);
-            }
-            this.debounceTimer = window.setTimeout(() => {
-                this.calculate();
-                saveToLocalStorage();
-            }, 500);
-        };
-
-        const toggleMode = () => {
-            const selectedMode = (document.querySelector('input[name="input-mode"]:checked') as HTMLInputElement).value;
-            const hoursDiv = document.querySelector('#hours-input') as HTMLElement;
-            const datetimeDiv = document.querySelector('#datetime-input') as HTMLElement;
-            if (selectedMode === 'hours') {
-                hoursDiv.style.display = 'block';
-                datetimeDiv.style.display = 'none';
-            } else {
-                hoursDiv.style.display = 'none';
-                datetimeDiv.style.display = 'block';
-            }
-            this.calculate(); // モード変更時に再計算
-            saveToLocalStorage();
-        };
-
-        modeRadios.forEach(radio => radio.addEventListener('change', toggleMode));
-        pointsInput.addEventListener('input', debouncedCalculate);
-        hoursInput.addEventListener('input', debouncedCalculate);
-        datetimeInput.addEventListener('input', debouncedCalculate);
-
-        // ハンバーガーメニューイベント
         const hamburgerBtn = document.querySelector('#hamburger-btn') as HTMLElement;
         const appMenu = document.querySelector('#app-menu') as HTMLElement;
         const menuItems = document.querySelectorAll('.menu-item') as NodeListOf<HTMLElement>;
@@ -105,87 +43,48 @@ class App {
 
         menuItems.forEach(item => {
             item.addEventListener('click', () => {
-                const app = item.dataset.app;
-                if (app === 'current') {
-                    // 現在のアプリは何もしない
-                } else if (app === 'tbd') {
-                    alert('他のアプリはまだ実装されていません。');
-                }
+                const app = item.dataset.app!;
+                this.switchApp(app);
+                localStorage.setItem('current-app', app);
+                // アクティブクラス更新
+                menuItems.forEach(mi => mi.classList.remove('active'));
+                item.classList.add('active');
                 appMenu.classList.remove('show');
             });
         });
     }
 
-    calculate() {
-        const selectedMode = (document.querySelector('input[name="input-mode"]:checked') as HTMLInputElement).value;
-        const resultDiv = document.querySelector('#result')!;
-
-        const pointsInput = document.querySelector('#points') as HTMLInputElement;
-        const hoursInput = document.querySelector('#hours') as HTMLInputElement;
-        const datetimeInput = document.querySelector('#datetime') as HTMLInputElement;
-
-        const pointsValue = pointsInput.value.trim();
-        const hoursValue = hoursInput.value.trim();
-        const datetimeValue = datetimeInput.value.trim();
-
-        if (pointsValue === '') {
-            resultDiv.textContent = '';
-            return;
+    switchApp(appName: string) {
+        if (this.currentApp) {
+            this.currentApp.destroy();
         }
+        const container = document.querySelector('#sub-app-container') as HTMLElement;
+        container.innerHTML = ''; // クリア
 
-        const points = parseInt(pointsValue);
-        if (isNaN(points) || points < 0) {
-            resultDiv.textContent = '無効な入力です。正の数値を入力してください。';
-            return;
+        switch (appName) {
+            case 'calculator':
+                this.currentApp = new HelperCalcApp();
+                break;
+            case 'dummy':
+                this.currentApp = new DummyApp();
+                break;
+            default:
+                this.currentApp = new DummyApp();
         }
-        if (points % 20 !== 0) {
-            resultDiv.textContent = '';
-            return;
-        }
+        this.currentApp.init(container);
 
-        let timeInMinutes: number;
-        if (selectedMode === 'hours') {
-            if (hoursValue === '') {
-                resultDiv.textContent = '';
-                return;
-            }
-            const hours = parseInt(hoursValue);
-            if (isNaN(hours) || hours < 0) {
-                resultDiv.textContent = '無効な入力です。正の数値を入力してください。';
-                return;
-            }
-            timeInMinutes = hours * 60;
-        } else {
-            if (datetimeValue === '') {
-                resultDiv.textContent = '';
-                return;
-            }
-            const datetime = new Date(datetimeValue);
-            if (isNaN(datetime.getTime())) {
-                resultDiv.textContent = '無効な日時です。';
-                return;
-            }
-            const diffMs = Date.now() - datetime.getTime();
-            if (diffMs < 0) {
-                resultDiv.textContent = '未来の日時は無効です。';
-                return;
-            }
-            timeInMinutes = Math.floor(diffMs / (1000 * 60));
-        }
-
-        try {
-            const { timeReward, loans, loanReward } = estimateLoans(points, timeInMinutes, selectedMode === 'datetime');
-            resultDiv.innerHTML = `
-                <div class="result-loans">編成回数（推定）: ${loans.toLocaleString()}回</div>
-                <p>登録時間報酬: ${timeReward.toLocaleString()}</p>
-                <p>編成回数報酬: ${loanReward.toLocaleString()}</p>
-            `;
-        } catch (error) {
-            const err = error as Error;
-            if (error instanceof NegativeLoanError) {
-                resultDiv.textContent = '';
-            } else {
-                resultDiv.textContent = err.message;
+        // タイトルを更新
+        const titleElement = document.querySelector('#app-title') as HTMLElement;
+        if (titleElement) {
+            switch (appName) {
+                case 'calculator':
+                    titleElement.textContent = '助っ人貸出回数計算機';
+                    break;
+                case 'dummy':
+                    titleElement.textContent = 'ダミーアプリ';
+                    break;
+                default:
+                    titleElement.textContent = 'アプリスイッチャー';
             }
         }
     }
