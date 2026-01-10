@@ -1,6 +1,7 @@
 import { estimateLoans } from './calculator';
 import { NegativeLoanError } from './calculator';
 import { SubApp } from './sub-app';
+import { StorageManager } from './storage-manager';
 
 class HelperCalcApp implements SubApp {
     private helperCalcDebounceTimer: number | null = null;
@@ -22,9 +23,9 @@ class HelperCalcApp implements SubApp {
     private helperCalcRender() {
         if (!this.helperCalcContainer) return;
 
-        const savedMode = localStorage.getItem('helper-calc-input-mode') || 'hours';
-        const savedHours = localStorage.getItem('helper-calc-hours') || '';
-        const savedDatetime = localStorage.getItem('helper-calc-datetime') || '';
+        const savedMode = StorageManager.getHelperCalcInputMode();
+        const savedHours = StorageManager.getHelperCalcHours();
+        const savedDatetime = StorageManager.getHelperCalcDatetime();
 
         this.helperCalcContainer.innerHTML = `
             <div id="calc-form">
@@ -59,9 +60,9 @@ class HelperCalcApp implements SubApp {
 
         const saveToLocalStorage = () => {
             const selectedMode = (this.helperCalcContainer!.querySelector('input[name="input-mode"]:checked') as HTMLInputElement).value;
-            localStorage.setItem('helper-calc-input-mode', selectedMode);
-            localStorage.setItem('helper-calc-hours', hoursInput.value);
-            localStorage.setItem('helper-calc-datetime', datetimeInput.value);
+            StorageManager.setHelperCalcInputMode(selectedMode);
+            StorageManager.setHelperCalcHours(hoursInput.value);
+            StorageManager.setHelperCalcDatetime(datetimeInput.value);
         };
 
         const debouncedCalculate = () => {

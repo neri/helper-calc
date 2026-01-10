@@ -48,6 +48,7 @@ export function estimateLoans(points: number, timeInMinutes: number, isDatetimeM
     if (points <= maxReward) {
         return { timeReward, loans, loanReward };
     } else {
+        console.error(`Calculated points: ${points}, loans: ${loans}, timeReward: ${timeReward}, loanReward: ${loanReward}, maxReward: ${maxReward}`);
         throw new OutOfRangeError('獲得報酬の値が計算範囲外です');
     }
 }

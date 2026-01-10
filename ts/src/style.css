@@ -4,26 +4,42 @@
     font-weight: 400;
 
     color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* ライトモードのカラー変数（デフォルト） */
+    --text-color: #213547;
+    --bg-color: #ffffff;
+    --link-color: #6478f0;
+    --link-hover-color: #4d5aef;
+    --button-bg-color: #6478f0;
+    --button-hover-bg-color: #4d5aef;
+    --title-bar-bg-color: #6478f0;
+    --tab-label-bg-color: #f5f5f5;
+    --tab-label-border-color: #d0d0d0;
+    --tab-label-text-color: #2a2a2a;
+    --tab-label-hover-bg-color: #e8e8e8;
+    --tab-checked-bg-color: #6478f0;
+    --tab-checked-border-color: #6478f0;
+    --tab-checked-text-color: white;
 }
 
 a {
     font-weight: 500;
-    color: #646cff;
+    color: var(--link-color);
     text-decoration: inherit;
 }
 
 a:hover {
-    color: #535bf2;
+    color: var(--link-hover-color);
 }
 
 body {
+    color: var(--text-color);
+    background-color: var(--bg-color);
     margin: 0;
     display: flex;
     justify-content: center;
@@ -46,14 +62,14 @@ button {
     font-size: 1rem;
     font-weight: 500;
     font-family: inherit;
-    background-color: #646cff;
+    background-color: var(--button-bg-color);
     color: white;
     cursor: pointer;
     transition: border-color 0.25s;
 }
 
 button:hover {
-    background-color: #535bf2;
+    background-color: var(--button-hover-bg-color);
 }
 
 button:focus,
@@ -61,19 +77,28 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
     :root {
-        color: #213547;
-        background-color: #ffffff;
+        /* ダークモードのカラー変数 */
+        --text-color: rgba(255, 255, 255, 0.87);
+        --bg-color: #242424;
+        --link-color: #3a3d7a;
+        --link-hover-color: #2d3065;
+        --button-bg-color: #3a3d7a;
+        --button-hover-bg-color: #2d3065;
+        --title-bar-bg-color: #3a3d7a;
+        --tab-label-bg-color: #2a2a2a;
+        --tab-label-border-color: #4a4a4a;
+        --tab-label-text-color: rgba(255, 255, 255, 0.87);
+        --tab-label-hover-bg-color: #3a3a3a;
+        --tab-checked-bg-color: #3a3d7a;
+        --tab-checked-border-color: #3a3d7a;
+        --tab-checked-text-color: white;
     }
+}
 
-    a:hover {
-        color: #747bff;
-    }
-
-    button {
-        background-color: #f9f9f9;
-    }
+--tab-checked-text-color: white;
+}
 }
 
 /* App styles */
@@ -89,7 +114,7 @@ button:focus-visible {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #646cff;
+    background-color: var(--title-bar-bg-color);
     color: white;
     padding: 1rem;
     z-index: 1000;
@@ -124,10 +149,10 @@ button:focus-visible {
 }
 
 .title-bar h2 {
-    margin: 0;
+    margin: 0 0 0 1rem;
     font-size: 1.5em;
     flex-grow: 1;
-    text-align: center;
+    text-align: left;
 }
 
 .app-menu {
@@ -195,7 +220,7 @@ input {
 
 .result-loans {
     font-size: 1.5em;
-    color: #646cff;
+    color: var(--link-color);
     margin-bottom: 1rem;
 }
 
@@ -204,14 +229,20 @@ input {
     margin-bottom: 1rem;
 }
 
+/* ダークモード（デフォルト）: 暗い背景、明るい文字 */
 #mode-selection label {
     flex: 1;
     padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: var(--tab-label-bg-color);
+    border: 1px solid var(--tab-label-border-color);
+    color: var(--tab-label-text-color);
     cursor: pointer;
     text-align: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+#mode-selection label:hover {
+    background-color: var(--tab-label-hover-bg-color);
 }
 
 #mode-selection label:first-child {
@@ -227,6 +258,7 @@ input {
 }
 
 #mode-selection input[type="radio"]:checked+label {
-    background-color: #646cff;
-    color: white;
+    background-color: var(--tab-checked-bg-color);
+    border-color: var(--tab-checked-border-color);
+    color: var(--tab-checked-text-color);
 }

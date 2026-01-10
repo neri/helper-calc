@@ -1,6 +1,7 @@
 import HelperCalcApp from './helper-calc-app';
-import DummyApp from './dummy-app';
+import TacticalRankCalcApp from './tactical-rank-calc-app';
 import { SubApp } from './sub-app';
+import { StorageManager } from './storage-manager';
 
 class App {
     private currentApp: SubApp | null = null;
@@ -12,7 +13,7 @@ class App {
     }
 
     init() {
-        const savedApp = localStorage.getItem('current-app') || 'calculator';
+        const savedApp = StorageManager.getCurrentApp();
         document.body.insertAdjacentHTML('afterbegin', `
             <div class="title-bar">
                 <button class="hamburger-menu" id="hamburger-btn">
@@ -20,10 +21,10 @@ class App {
                     <span></span>
                     <span></span>
                 </button>
-                <h2 id="app-title">アプリスイッチャー</h2>
+                <h2 id="app-title">助っ人貸出回数計算機</h2>
                 <div class="app-menu" id="app-menu">
                     <div class="menu-item ${savedApp === 'calculator' ? 'active' : ''}" data-app="calculator">助っ人貸出回数計算機</div>
-                    <div class="menu-item ${savedApp === 'dummy' ? 'active' : ''}" data-app="dummy">ダミーアプリ</div>
+                    <div class="menu-item ${savedApp === 'tactical' ? 'active' : ''}" data-app="tactical">対抗戦順位計算機</div>
                 </div>
             </div>
         `);
@@ -45,7 +46,7 @@ class App {
             item.addEventListener('click', () => {
                 const app = item.dataset.app!;
                 this.switchApp(app);
-                localStorage.setItem('current-app', app);
+                StorageManager.setCurrentApp(app);
                 // アクティブクラス更新
                 menuItems.forEach(mi => mi.classList.remove('active'));
                 item.classList.add('active');
@@ -65,11 +66,11 @@ class App {
             case 'calculator':
                 this.currentApp = new HelperCalcApp();
                 break;
-            case 'dummy':
-                this.currentApp = new DummyApp();
+            case 'tactical':
+                this.currentApp = new TacticalRankCalcApp();
                 break;
             default:
-                this.currentApp = new DummyApp();
+                this.currentApp = new HelperCalcApp();
         }
         this.currentApp.init(container);
 
@@ -80,11 +81,11 @@ class App {
                 case 'calculator':
                     titleElement.textContent = '助っ人貸出回数計算機';
                     break;
-                case 'dummy':
-                    titleElement.textContent = 'ダミーアプリ';
+                case 'tactical':
+                    titleElement.textContent = '対抗戦順位計算機';
                     break;
                 default:
-                    titleElement.textContent = 'アプリスイッチャー';
+                    titleElement.textContent = '助っ人貸出回数計算機';
             }
         }
     }
