@@ -34,12 +34,12 @@ class TacticalRankCalcApp implements SubApp {
                     <label for="tactical-rank-input">現在の順位:</label>
                     <input type="number" id="tactical-rank-input" min="1" max="15001" placeholder="15001" value="${savedRank}">
                 </div>
-                <div>
+                <div class="iterations-container">
                     <label for="tactical-iterations-select">挑戦回数:</label>
                     <select id="tactical-iterations-select">
                         ${Array.from({ length: 25 }, (_, i) => i + 1)
-                            .map(i => `<option value="${i}" ${i === savedIterations ? 'selected' : ''}>${i}</option>`)
-                            .join('')}
+                .map(i => `<option value="${i}" ${i === savedIterations ? 'selected' : ''}>${i}</option>`)
+                .join('')}
                     </select>
                 </div>
                 <button id="tactical-calculate-btn">計算</button>
