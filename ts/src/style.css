@@ -30,6 +30,8 @@ body {
     align-items: flex-start;
     min-width: 320px;
     min-height: 100vh;
+    padding-top: 80px;
+    /* タイトルバーの高さ分 */
 }
 
 h1 {
@@ -80,6 +82,90 @@ button:focus-visible {
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
+}
+
+.title-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #646cff;
+    color: white;
+    padding: 1rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hamburger-menu {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 42px;
+    height: 34px;
+    padding: 6px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.hamburger-menu span {
+    display: block;
+    height: 4px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: 0.2s ease;
+}
+
+.title-bar h2 {
+    margin: 0;
+    font-size: 1.5em;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.app-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 200px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1001;
+}
+
+.app-menu.show {
+    display: block;
+}
+
+.menu-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-weight: 500;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item:hover {
+    background-color: #f8f9fa;
+    color: #000;
+}
+
+.menu-item[data-app="tbd"] {
+    display: none;
 }
 
 form {

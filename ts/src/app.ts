@@ -13,8 +13,21 @@ class App {
         const savedHours = localStorage.getItem('hours') || '';
         const savedDatetime = localStorage.getItem('datetime') || '';
         const app = document.querySelector('#app')!;
+        document.body.insertAdjacentHTML('afterbegin', `
+            <div class="title-bar">
+                <button class="hamburger-menu" id="hamburger-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h2>助っ人貸出回数計算機</h2>
+                <div class="app-menu" id="app-menu">
+                    <div class="menu-item active" data-app="current">助っ人貸出回数計算機</div>
+                    <div class="menu-item" data-app="tbd">他のアプリ (TBD)</div>
+                </div>
+            </div>
+        `);
         app.innerHTML = `
-      <h2>助っ人貸出回数計算機</h2>
       <div id="calc-form">
         <div id="mode-selection">
           <label><input type="radio" name="input-mode" value="hours" ${savedMode === 'hours' ? 'checked' : ''}> 登録時間</label>
@@ -80,6 +93,27 @@ class App {
         pointsInput.addEventListener('input', debouncedCalculate);
         hoursInput.addEventListener('input', debouncedCalculate);
         datetimeInput.addEventListener('input', debouncedCalculate);
+
+        // ハンバーガーメニューイベント
+        const hamburgerBtn = document.querySelector('#hamburger-btn') as HTMLElement;
+        const appMenu = document.querySelector('#app-menu') as HTMLElement;
+        const menuItems = document.querySelectorAll('.menu-item') as NodeListOf<HTMLElement>;
+
+        hamburgerBtn.addEventListener('click', () => {
+            appMenu.classList.toggle('show');
+        });
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const app = item.dataset.app;
+                if (app === 'current') {
+                    // 現在のアプリは何もしない
+                } else if (app === 'tbd') {
+                    alert('他のアプリはまだ実装されていません。');
+                }
+                appMenu.classList.remove('show');
+            });
+        });
     }
 
     calculate() {
