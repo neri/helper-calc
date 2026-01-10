@@ -30,8 +30,10 @@ class HelperCalcApp implements SubApp {
         this.helperCalcContainer.innerHTML = `
             <div id="calc-form">
                 <div id="mode-selection">
-                    <label><input type="radio" name="input-mode" value="hours" ${savedMode === 'hours' ? 'checked' : ''}> 登録時間</label>
-                    <label><input type="radio" name="input-mode" value="datetime" ${savedMode === 'datetime' ? 'checked' : ''}> 設定日時</label>
+                    <input type="radio" name="input-mode" value="hours" id="mode-hours" ${savedMode === 'hours' ? 'checked' : ''}>
+                    <label for="mode-hours">登録時間</label>
+                    <input type="radio" name="input-mode" value="datetime" id="mode-datetime" ${savedMode === 'datetime' ? 'checked' : ''}>
+                    <label for="mode-datetime">設定日時</label>
                 </div>
                 <div id="hours-input" ${savedMode === 'datetime' ? 'style="display: none;"' : ''}>
                     <label for="hours">登録時間:</label>

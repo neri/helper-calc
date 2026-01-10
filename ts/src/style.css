@@ -97,10 +97,6 @@ button:focus-visible {
     }
 }
 
---tab-checked-text-color: white;
-}
-}
-
 /* App styles */
 #app {
     max-width: 600px;
@@ -229,6 +225,10 @@ input {
     margin-bottom: 1rem;
 }
 
+#mode-selection input[type="radio"] {
+    display: none;
+}
+
 /* ダークモード（デフォルト）: 暗い背景、明るい文字 */
 #mode-selection label {
     flex: 1;
@@ -238,27 +238,27 @@ input {
     color: var(--tab-label-text-color);
     cursor: pointer;
     text-align: center;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    border-right: 1px solid var(--tab-label-border-color);
+}
+
+#mode-selection label:first-of-type {
+    border-radius: 4px 0 0 4px;
+    border-right: 1px solid var(--tab-label-border-color);
+}
+
+#mode-selection label:last-of-type {
+    border-radius: 0 4px 4px 0;
+    border-right: none;
 }
 
 #mode-selection label:hover {
     background-color: var(--tab-label-hover-bg-color);
 }
 
-#mode-selection label:first-child {
-    border-radius: 4px 0 0 4px;
-}
-
-#mode-selection label:last-child {
-    border-radius: 0 4px 4px 0;
-}
-
-#mode-selection input[type="radio"] {
-    display: none;
-}
-
 #mode-selection input[type="radio"]:checked+label {
     background-color: var(--tab-checked-bg-color);
     border-color: var(--tab-checked-border-color);
     color: var(--tab-checked-text-color);
+    font-weight: bold;
 }
