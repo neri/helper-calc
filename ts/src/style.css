@@ -211,6 +211,33 @@ select {
     border: 1px solid var(--tab-label-border-color);
 }
 
+.credit-input {
+    width: 13ch;
+}
+
+.report-input {
+    width: 8ch;
+}
+
+.credit-warning {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.report-result-group {
+    border: 1px solid var(--tab-label-border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.report-result-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+}
+
 #result {
     margin-top: 2rem;
     font-size: 1.2rem;
