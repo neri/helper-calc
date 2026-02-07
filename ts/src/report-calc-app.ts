@@ -149,7 +149,11 @@ class ReportCalcApp implements SubApp {
             + parsedT2.value * 500
             + parsedT3.value * 2000
             + parsedT4.value * 10000;
-            const fullyTrainedCount = exp / 1249200;
+        const fullyTrainedCount = exp / 1249200;
+        const creditPeopleCount = parsedCredits.value / 50000000;
+        const specialRequest = (fullyTrainedCount >= 5 && fullyTrainedCount > (creditPeopleCount / 2))
+            ? 'クレジット推奨'
+            : 'レポート推奨';
         const requiredCredits = exp * 7;
         const creditClass = requiredCredits > parsedCredits.value ? 'credit-warning' : '';
         const creditValue = parsedCredits.value;
@@ -161,6 +165,10 @@ class ReportCalcApp implements SubApp {
         const wb25Count = creditValue / 10500000;
         const fullyTrainedCreditCount = creditValue / 95400716;
         resultsDiv.innerHTML = `
+            <div class="report-result-group">
+                <div class="report-result-title">特別依頼</div>
+                <div>${specialRequest}</div>
+            </div>
             <div class="report-result-group">
                 <div class="report-result-title">レポート</div>
                 <div>EXP: ${exp.toLocaleString()}</div>
