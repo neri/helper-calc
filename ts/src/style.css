@@ -113,7 +113,7 @@ button:focus-visible {
     background-color: var(--title-bar-bg-color);
     color: white;
     padding: 7px 0.5rem;
-    z-index: 1000;
+    z-index: 1102;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -151,27 +151,38 @@ button:focus-visible {
 }
 
 .app-menu {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 48px;
     left: 0;
-    width: 200px;
-    background: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: none;
-    z-index: 1001;
+    width: min(280px, 80vw);
+    height: calc(100vh - 48px);
+    background: var(--bg-color);
+    border-top: 1px solid var(--tab-label-border-color);
+    border-radius: 0;
+    box-shadow: 6px 0 18px rgba(0, 0, 0, 0.18);
+    padding: 0.5rem 0;
+    display: block;
+    z-index: 1103;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .app-menu.show {
-    display: block;
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .menu-item {
     padding: 0.75rem 1rem;
     cursor: pointer;
-    border-bottom: 1px solid #eee;
-    color: #333;
+    border-bottom: 1px solid var(--tab-label-border-color);
+    color: var(--text-color);
     font-weight: 500;
 }
 
@@ -180,8 +191,79 @@ button:focus-visible {
 }
 
 .menu-item:hover {
-    background-color: #f8f9fa;
-    color: #000;
+    background-color: var(--tab-label-hover-bg-color);
+    color: var(--text-color);
+}
+
+.menu-backdrop {
+    position: fixed;
+    inset: 48px 0 0 0;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease;
+    z-index: 1101;
+}
+
+.menu-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-dialog {
+    width: min(560px, 100%);
+    background: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--tab-label-border-color);
+    text-align: left;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem 0.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.modal-body {
+    padding: 0 1.25rem 1.25rem;
+    line-height: 1.7;
+}
+
+.modal-close {
+    background: transparent;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.modal-close:hover {
+    background-color: var(--tab-label-hover-bg-color);
 }
 
 .menu-item[data-app="tbd"] {
