@@ -2,7 +2,6 @@ import HelperCalcApp from './helper-calc-app';
 import TacticalRankCalcApp from './tactical-rank-calc-app';
 import ReportCalcApp from './report-calc-app';
 import { SubApp } from './sub-app';
-import { StorageManager } from './storage-manager';
 
 class App {
     private currentApp: SubApp | null = null;
@@ -14,9 +13,8 @@ class App {
     }
 
     init() {
-        const savedApp = StorageManager.getCurrentApp();
         const hashApp = this.normalizeAppFromHash(location.hash);
-        const initialApp = hashApp || savedApp;
+        const initialApp = hashApp || 'helper';
         document.body.insertAdjacentHTML('afterbegin', `
             <div class="title-bar">
                 <button class="hamburger-menu" id="hamburger-btn">
@@ -51,8 +49,6 @@ class App {
             item.addEventListener('click', () => {
                 const app = item.dataset.app!;
                 this.switchApp(app);
-                StorageManager.setCurrentApp(app);
-                this.updateHash(app);
                 // アクティブクラス更新
                 menuItems.forEach(mi => mi.classList.remove('active'));
                 item.classList.add('active');

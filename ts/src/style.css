@@ -197,8 +197,8 @@ form {
 }
 
 label {
-    display: block;
-    margin-bottom: 0.5rem;
+    display: inline-block;
+    margin-bottom: 0;
     font-weight: bold;
 }
 
@@ -211,12 +211,15 @@ select {
     border: 1px solid var(--tab-label-border-color);
 }
 
-.credit-input {
-    width: 13ch;
-}
-
-.report-input {
-    width: 8ch;
+#calc-form>div:not(#mode-selection),
+#report-calc-form>div,
+#tactical-rank-calc-form>div {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .credit-warning {
@@ -241,7 +244,10 @@ select {
 #result {
     margin-top: 2rem;
     font-size: 1.2rem;
-    font-weight: bold;
+}
+
+.result-value {
+    font-weight: 300;
 }
 
 .result-loans {

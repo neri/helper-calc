@@ -160,9 +160,9 @@ class HelperCalcApp implements SubApp {
         try {
             const { timeReward, loans, loanReward } = estimateLoans(points, timeInMinutes, selectedMode === 'datetime');
             resultDiv.innerHTML = `
-                <div class="result-loans">編成回数（推定）: ${loans.toLocaleString()}回</div>
-                <p>登録時間報酬: ${timeReward.toLocaleString()}</p>
-                <p>編成回数報酬: ${loanReward.toLocaleString()}</p>
+                <div class="result-loans"><strong>編成回数（推定）</strong>: <span class="result-value">${loans.toLocaleString()}回</span></div>
+                <p><strong>登録時間報酬</strong>: <span class="result-value">${timeReward.toLocaleString()}</span></p>
+                <p><strong>編成回数報酬</strong>: <span class="result-value">${loanReward.toLocaleString()}</span></p>
             `;
         } catch (error) {
             const err = error as Error;

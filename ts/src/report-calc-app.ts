@@ -30,19 +30,19 @@ class ReportCalcApp implements SubApp {
             <div id="report-calc-form">
                 <div>
                     <label for="report-t1">初級レポート:</label>
-                    <input type="number" id="report-t1" name="report_t1" class="report-input" min="0" step="1" inputmode="numeric" value="${savedReportT1}" data-storage-key="report_t1">
+                    <input type="number" id="report-t1" name="report_t1" class="report-input" min="0" max="999999" step="1" inputmode="numeric" value="${savedReportT1}" data-storage-key="report_t1">
                 </div>
                 <div>
                     <label for="report-t2">中級レポート:</label>
-                    <input type="number" id="report-t2" name="report_t2" class="report-input" min="0" step="1" inputmode="numeric" value="${savedReportT2}" data-storage-key="report_t2">
+                    <input type="number" id="report-t2" name="report_t2" class="report-input" min="0" max="999999" step="1" inputmode="numeric" value="${savedReportT2}" data-storage-key="report_t2">
                 </div>
                 <div>
                     <label for="report-t3">上級レポート:</label>
-                    <input type="number" id="report-t3" name="report_t3" class="report-input" min="0" step="1" inputmode="numeric" value="${savedReportT3}" data-storage-key="report_t3">
+                    <input type="number" id="report-t3" name="report_t3" class="report-input" min="0" max="999999" step="1" inputmode="numeric" value="${savedReportT3}" data-storage-key="report_t3">
                 </div>
                 <div>
                     <label for="report-t4">最上級レポート:</label>
-                    <input type="number" id="report-t4" name="report_t4" class="report-input" min="0" step="1" inputmode="numeric" value="${savedReportT4}" data-storage-key="report_t4">
+                    <input type="number" id="report-t4" name="report_t4" class="report-input" min="0" max="999999" step="1" inputmode="numeric" value="${savedReportT4}" data-storage-key="report_t4">
                 </div>
                 <div>
                     <label for="report-credits">クレジット:</label>
@@ -107,9 +107,15 @@ class ReportCalcApp implements SubApp {
         const reportT4 = this.reportCalcContainer.querySelector('#report-t4') as HTMLInputElement;
         const credits = this.reportCalcContainer.querySelector('#report-credits') as HTMLInputElement;
 
+        const reportMax = 999999;
         const parsedT1 = this.parseIntegerInput(reportT1.value, '初級レポート');
         if (!parsedT1.ok) {
             errorDiv.textContent = parsedT1.message;
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        if (parsedT1.value > reportMax) {
+            errorDiv.textContent = '初級レポートは6桁まで入力してください。';
             resultsDiv.innerHTML = '';
             return;
         }
@@ -119,15 +125,30 @@ class ReportCalcApp implements SubApp {
             resultsDiv.innerHTML = '';
             return;
         }
+        if (parsedT2.value > reportMax) {
+            errorDiv.textContent = '中級レポートは6桁まで入力してください。';
+            resultsDiv.innerHTML = '';
+            return;
+        }
         const parsedT3 = this.parseIntegerInput(reportT3.value, '上級レポート');
         if (!parsedT3.ok) {
             errorDiv.textContent = parsedT3.message;
             resultsDiv.innerHTML = '';
             return;
         }
+        if (parsedT3.value > reportMax) {
+            errorDiv.textContent = '上級レポートは6桁まで入力してください。';
+            resultsDiv.innerHTML = '';
+            return;
+        }
         const parsedT4 = this.parseIntegerInput(reportT4.value, '最上級レポート');
         if (!parsedT4.ok) {
             errorDiv.textContent = parsedT4.message;
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        if (parsedT4.value > reportMax) {
+            errorDiv.textContent = '最上級レポートは6桁まで入力してください。';
             resultsDiv.innerHTML = '';
             return;
         }
@@ -171,19 +192,19 @@ class ReportCalcApp implements SubApp {
             </div>
             <div class="report-result-group">
                 <div class="report-result-title">レポート</div>
-                <div>EXP: ${exp.toLocaleString()}</div>
-                <div>レベル90可能な人数: ${fullyTrainedCount.toFixed(2)}</div>
-                <div class="${creditClass}">消費に必要なクレジット: ${requiredCredits.toLocaleString()}</div>
+                <div><strong>EXP</strong>: <span class="result-value">${exp.toLocaleString()}</span></div>
+                <div><strong>レベル90可能な人数</strong>: <span class="result-value">${fullyTrainedCount.toFixed(2)}</span></div>
+                <div class="${creditClass}"><strong>消費に必要なクレジット</strong>: <span class="result-value">${requiredCredits.toLocaleString()}</span></div>
             </div>
             <div class="report-result-group">
                 <div class="report-result-title">クレジット</div>
-                <div>完全育成可能な人数: ${fullyTrainedCreditCount.toFixed(2)}</div>
-                <div>レベル90可能な人数: ${level90Count.toFixed(2)}</div>
-                <div>スキル5MMM可能な人数: ${skill5MmmCount.toFixed(2)}</div>
-                <div>装備MMM可能な人数: ${equipmentMmmCount.toFixed(2)}</div>
-                <div>装備MMMまで強化可能な強化珠の人数: ${equipmentBeadCount.toFixed(2)}</div>
-                <div>固有4まで育成可能な人数: ${unique4Count.toFixed(2)}</div>
-                <div>WB25まで育成可能な人数: ${wb25Count.toFixed(2)}</div>
+                <div><strong>完全育成可能な人数</strong>: <span class="result-value">${fullyTrainedCreditCount.toFixed(2)}</span></div>
+                <div><strong>レベル90可能な人数</strong>: <span class="result-value">${level90Count.toFixed(2)}</span></div>
+                <div><strong>スキル最大可能な人数</strong>: <span class="result-value">${skill5MmmCount.toFixed(2)}</span></div>
+                <div><strong>装備最大可能な人数</strong>: <span class="result-value">${equipmentMmmCount.toFixed(2)}</span></div>
+                <div><strong>装備最大強化に必要な強化珠の人数</strong>: <span class="result-value">${equipmentBeadCount.toFixed(2)}</span></div>
+                <div><strong>固有4まで育成可能な人数</strong>: <span class="result-value">${unique4Count.toFixed(2)}</span></div>
+                <div><strong>WB25まで育成可能な人数</strong>: <span class="result-value">${wb25Count.toFixed(2)}</span></div>
             </div>
         `;
     }

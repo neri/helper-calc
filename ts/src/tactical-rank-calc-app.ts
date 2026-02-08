@@ -119,7 +119,7 @@ class TacticalRankCalcApp implements SubApp {
 
         // 計算結果を表示
         const resultsHTML = results
-            .map((r, i) => `<div>${i + 1}回目：${r}位</div>`)
+            .map((r, i) => `<div><strong>${i + 1}回目</strong>：<span class="result-value">${r}位</span></div>`)
             .join('');
         resultsDiv.innerHTML = resultsHTML;
 
@@ -128,9 +128,9 @@ class TacticalRankCalcApp implements SubApp {
         const finalRank = results[results.length - 1];
         const finalReward = getReward(finalRank);
 
-        let rewardsHTML = `<div>現在の報酬見込: 石${currentReward.stone} コイン${currentReward.coin}</div>`;
+        let rewardsHTML = `<div><strong>現在の報酬見込</strong>: <span class="result-value">石${currentReward.stone} コイン${currentReward.coin}</span></div>`;
         if (finalRank !== rank) {
-            rewardsHTML += `<div>最終報酬見込: 石${finalReward.stone} コイン${finalReward.coin}</div>`;
+            rewardsHTML += `<div><strong>最終報酬見込</strong>: <span class="result-value">石${finalReward.stone} コイン${finalReward.coin}</span></div>`;
         }
         rewardsDiv.innerHTML = rewardsHTML;
 
@@ -141,7 +141,7 @@ class TacticalRankCalcApp implements SubApp {
         let stoneCalcHTML = '';
         if (minStoneBreak > 0) {
             const stoneCount = minStoneBreak * 60;
-            stoneCalcHTML = `<div>最低石割り：${minStoneBreak}回 ${stoneCount}個</div>`;
+            stoneCalcHTML = `<div><strong>最低石割り</strong>：<span class="result-value">${minStoneBreak}回 ${stoneCount}個</span></div>`;
         }
         stoneCalcDiv.innerHTML = stoneCalcHTML;
     }

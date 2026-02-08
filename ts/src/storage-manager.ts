@@ -7,9 +7,6 @@
  * ストレージキーの定数定義
  */
 export const STORAGE_KEYS = {
-    // メインアプリ (App)
-    CURRENT_APP: 'app-current-app',
-
     // サブアプリ: 助っ人貸出回数計算機 (HelperCalcApp)
     HELPER_CALC_INPUT_MODE: 'helper-calc-input-mode',
     HELPER_CALC_HOURS: 'helper-calc-hours',
@@ -31,15 +28,6 @@ export const STORAGE_KEYS = {
  * ストレージマネージャー
  */
 export const StorageManager = {
-    // ===== メインアプリ =====
-    getCurrentApp(): string {
-        return localStorage.getItem(STORAGE_KEYS.CURRENT_APP) || 'helper';
-    },
-
-    setCurrentApp(appName: string): void {
-        localStorage.setItem(STORAGE_KEYS.CURRENT_APP, appName);
-    },
-
     // ===== 助っ人貸出回数計算機 =====
     getHelperCalcInputMode(): string {
         return localStorage.getItem(STORAGE_KEYS.HELPER_CALC_INPUT_MODE) || 'hours';
