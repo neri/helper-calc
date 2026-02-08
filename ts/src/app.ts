@@ -41,6 +41,7 @@ class App {
                         <p>助っ人計算や対抗戦順位、レポート作成の目安をまとめて扱えるツールです。</p>
                         <p>用途に合わせて上のメニューから切り替えて使ってください。</p>
                         <p>今後の更新で計算精度の改善や便利な補助機能を追加予定です。</p>
+                        <p>このアプリは全ての計算をデバイス上で計算し、必要なリソースの読み込み以外に外部と通信しません。</p>
                         <p><a href="https://github.com/neri/helper-calc" target="_blank" rel="noopener noreferrer">GitHubで表示</a></p>
                     </div>
                 </div>
