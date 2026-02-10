@@ -25,6 +25,8 @@
     --tab-checked-bg-color: #6478f0;
     --tab-checked-border-color: #6478f0;
     --tab-checked-text-color: white;
+    --warning-text-color: #d32f2f;
+    --note-text-color: rgba(0, 0, 0, 0.55);
 }
 
 a {
@@ -94,6 +96,8 @@ button:focus-visible {
         --tab-checked-bg-color: #3a3d7a;
         --tab-checked-border-color: #3a3d7a;
         --tab-checked-text-color: white;
+        --warning-text-color: #ff6b6b;
+        --note-text-color: rgba(255, 255, 255, 0.6);
     }
 }
 
@@ -293,6 +297,50 @@ select {
     border: 1px solid var(--tab-label-border-color);
 }
 
+.input-with-suffix {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.input-suffix {
+    margin-left: 0.35rem;
+    font-weight: 600;
+}
+
+.report-calc-settings {
+    margin: 0;
+    padding: 0;
+}
+
+.report-calc-settings>summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+}
+
+.report-calc-settings>summary::after {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-left: 0.5rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+.report-calc-settings[open]>div {
+    margin: 0.5rem;
+}
+
+.report-calc-settings[open]>summary::after {
+    transform: rotate(225deg);
+}
+
 #calc-form>div:not(#mode-selection),
 #report-calc-form>div,
 #tactical-rank-calc-form>div {
@@ -305,8 +353,7 @@ select {
 }
 
 .credit-warning {
-    color: #d32f2f;
-    font-weight: bold;
+    color: var(--warning-text-color);
 }
 
 .report-result-group {
@@ -321,6 +368,12 @@ select {
     font-weight: bold;
     margin-bottom: 0.5rem;
     font-size: 1.05rem;
+}
+
+.report-result-note {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--note-text-color);
 }
 
 #result {
@@ -397,6 +450,8 @@ body.dark {
     --tab-checked-bg-color: #3a3d7a;
     --tab-checked-border-color: #3a3d7a;
     --tab-checked-text-color: white;
+    --warning-text-color: #ff6b6b;
+    --note-text-color: rgba(255, 255, 255, 0.6);
 }
 
 .iterations-container {

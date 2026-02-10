@@ -25,6 +25,8 @@ class ReportCalcApp implements SubApp {
         const savedReportT3 = StorageManager.getReportCalcReportT3();
         const savedReportT4 = StorageManager.getReportCalcReportT4();
         const savedCredits = StorageManager.getReportCalcCredits();
+        const savedBasePeople = StorageManager.getReportCalcBasePeople();
+        const savedTrainCredits = StorageManager.getReportCalcTrainCredits();
 
         this.reportCalcContainer.innerHTML = `
             <div id="report-calc-form">
@@ -46,8 +48,25 @@ class ReportCalcApp implements SubApp {
                 </div>
                 <div>
                     <label for="report-credits">クレジット:</label>
-                    <input type="number" id="report-credits" class="credit-input" min="0" max="9999999999" step="1" inputmode="numeric" value="${savedCredits}">
+                    <span class="input-with-suffix">
+                        <input type="number" id="report-credits" class="credit-input" min="0" max="99999" step="1" inputmode="numeric" value="${savedCredits}">
+                        <span class="input-suffix">M</span>
+                    </span>
                 </div>
+                <details class="report-calc-settings">
+                    <summary>詳細設定</summary>
+                    <div>
+                        <label for="report-base-people">基準人数:</label>
+                        <input type="number" id="report-base-people" min="1" max="9" step="1" inputmode="numeric" value="${savedBasePeople}" placeholder="5">
+                    </div>
+                    <div>
+                        <label for="report-train-credits">育成基準:</label>
+                        <span class="input-with-suffix">
+                            <input type="number" id="report-train-credits" min="1" max="99" step="1" inputmode="numeric" value="${savedTrainCredits}" placeholder="50">
+                            <span class="input-suffix">M</span>
+                        </span>
+                    </div>
+                </details>
                 <button id="report-calc-btn">計算</button>
             </div>
             <div id="report-calc-error"></div>
@@ -67,12 +86,16 @@ class ReportCalcApp implements SubApp {
             const reportT3 = this.reportCalcContainer!.querySelector('#report-t3') as HTMLInputElement;
             const reportT4 = this.reportCalcContainer!.querySelector('#report-t4') as HTMLInputElement;
             const credits = this.reportCalcContainer!.querySelector('#report-credits') as HTMLInputElement;
+            const basePeople = this.reportCalcContainer!.querySelector('#report-base-people') as HTMLInputElement;
+            const trainCredits = this.reportCalcContainer!.querySelector('#report-train-credits') as HTMLInputElement;
 
             StorageManager.setReportCalcReportT1(reportT1.value);
             StorageManager.setReportCalcReportT2(reportT2.value);
             StorageManager.setReportCalcReportT3(reportT3.value);
             StorageManager.setReportCalcReportT4(reportT4.value);
             StorageManager.setReportCalcCredits(credits.value);
+            StorageManager.setReportCalcBasePeople(basePeople.value);
+            StorageManager.setReportCalcTrainCredits(trainCredits.value);
         };
 
         const debouncedCalculate = () => {
@@ -106,6 +129,8 @@ class ReportCalcApp implements SubApp {
         const reportT3 = this.reportCalcContainer.querySelector('#report-t3') as HTMLInputElement;
         const reportT4 = this.reportCalcContainer.querySelector('#report-t4') as HTMLInputElement;
         const credits = this.reportCalcContainer.querySelector('#report-credits') as HTMLInputElement;
+        const basePeople = this.reportCalcContainer.querySelector('#report-base-people') as HTMLInputElement;
+        const trainCredits = this.reportCalcContainer.querySelector('#report-train-credits') as HTMLInputElement;
 
         const reportMax = 999999;
         const parsedT1 = this.parseIntegerInput(reportT1.value, '初級レポート');
@@ -158,8 +183,32 @@ class ReportCalcApp implements SubApp {
             resultsDiv.innerHTML = '';
             return;
         }
-        if (parsedCredits.value > 9999999999) {
-            errorDiv.textContent = 'クレジットは10桁まで入力してください。';
+        if (parsedCredits.value > 99999) {
+            errorDiv.textContent = 'クレジットは5桁まで入力してください。';
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        const parsedBasePeople = this.parseIntegerInput(basePeople.value, '基準人数');
+        if (!parsedBasePeople.ok) {
+            errorDiv.textContent = parsedBasePeople.message;
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        const normalizedBasePeople = parsedBasePeople.value === 0 ? 5 : parsedBasePeople.value;
+        if (normalizedBasePeople < 1 || normalizedBasePeople > 9) {
+            errorDiv.textContent = '基準人数は1桁の整数を入力してください。';
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        const parsedTrainCredits = this.parseIntegerInput(trainCredits.value, '育成基準');
+        if (!parsedTrainCredits.ok) {
+            errorDiv.textContent = parsedTrainCredits.message;
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        const normalizedTrainCredits = parsedTrainCredits.value === 0 ? 50 : parsedTrainCredits.value;
+        if (normalizedTrainCredits < 1 || normalizedTrainCredits > 99) {
+            errorDiv.textContent = '育成基準は2桁の整数を入力してください。';
             resultsDiv.innerHTML = '';
             return;
         }
@@ -171,17 +220,27 @@ class ReportCalcApp implements SubApp {
             + parsedT3.value * 2000
             + parsedT4.value * 10000;
         const fullyTrainedCount = exp / 1249200;
-        const creditPeopleCount = parsedCredits.value / 50000000;
-        const specialRequest = (fullyTrainedCount >= 5 && fullyTrainedCount > (creditPeopleCount / 2))
-            ? 'クレジット推奨'
+        const creditValue = parsedCredits.value * 1000000;
+        const formatPeople = (value: number) => (Math.floor(value * 10) / 10).toFixed(1);
+        const creditPeopleCount = creditValue / (normalizedTrainCredits * 1000000);
+        const creditRecommendLimitM = (fullyTrainedCount / 2) * normalizedTrainCredits;
+        const shouldRecommendCredit = fullyTrainedCount >= normalizedBasePeople
+            && parsedCredits.value < creditRecommendLimitM;
+        const specialRequest = shouldRecommendCredit
+            ? `クレジット推奨(約${formatPeople(creditRecommendLimitM)}Mまで)`
             : 'レポート推奨';
+        const specialRequestNote = shouldRecommendCredit
+            ? '<div class="report-result-note">※ 基本的にはレポート周回した方が効率が良いとされています。</div>'
+            : '';
+        const reportT1People = parsedT1.value / 25000;
+        const reportT2People = parsedT2.value / 2500;
+        const reportT3People = parsedT3.value / 625;
+        const reportT4People = parsedT4.value / 125;
         const requiredCredits = exp * 7;
-        const creditClass = requiredCredits > parsedCredits.value ? 'credit-warning' : '';
-        const creditValue = parsedCredits.value;
+        const creditClass = requiredCredits > creditValue ? 'credit-warning' : '';
         const level90Count = creditValue / 8744295;
         const skill5MmmCount = creditValue / 40017500;
         const equipmentMmmCount = creditValue / 5090088;
-        const equipmentBeadCount = creditValue / 16419933;
         const unique4Count = creditValue / 14628900;
         const wb25Count = creditValue / 10500000;
         const fullyTrainedCreditCount = creditValue / 95400716;
@@ -189,22 +248,27 @@ class ReportCalcApp implements SubApp {
             <div class="report-result-group">
                 <div class="report-result-title">特別依頼</div>
                 <div>${specialRequest}</div>
+                ${specialRequestNote}
             </div>
             <div class="report-result-group">
                 <div class="report-result-title">レポート</div>
-                <div><strong>EXP</strong>: <span class="result-value">${exp.toLocaleString()}</span></div>
-                <div><strong>レベル90可能な人数</strong>: <span class="result-value">${fullyTrainedCount.toFixed(2)}</span></div>
-                <div class="${creditClass}"><strong>消費に必要なクレジット</strong>: <span class="result-value">${requiredCredits.toLocaleString()}</span></div>
+                <div><strong>レベル90可能な人数</strong>: 約 <span class="result-value">${formatPeople(fullyTrainedCount)}</span> 人分</div>
+                <div><strong>初級レポート</strong>: 約 <span class="result-value">${formatPeople(reportT1People)}</span> 人分</div>
+                <div><strong>中級レポート</strong>: 約 <span class="result-value">${formatPeople(reportT2People)}</span> 人分</div>
+                <div><strong>上級レポート</strong>: 約 <span class="result-value">${formatPeople(reportT3People)}</span> 人分</div>
+                <div><strong>最上級レポート</strong>: 約 <span class="result-value">${formatPeople(reportT4People)}</span> 人分</div>
+                <div><strong>合計EXP</strong>: <span class="result-value">${exp.toLocaleString()}</span></div>
+                <div class="${creditClass}"><strong>消費に必要なクレジット</strong>: 約 <span class="result-value">${requiredCredits.toLocaleString()}</span></div>
             </div>
             <div class="report-result-group">
                 <div class="report-result-title">クレジット</div>
-                <div><strong>完全育成可能な人数</strong>: <span class="result-value">${fullyTrainedCreditCount.toFixed(2)}</span></div>
-                <div><strong>レベル90可能な人数</strong>: <span class="result-value">${level90Count.toFixed(2)}</span></div>
-                <div><strong>スキル最大可能な人数</strong>: <span class="result-value">${skill5MmmCount.toFixed(2)}</span></div>
-                <div><strong>装備最大可能な人数</strong>: <span class="result-value">${equipmentMmmCount.toFixed(2)}</span></div>
-                <div><strong>装備最大強化に必要な強化珠の人数</strong>: <span class="result-value">${equipmentBeadCount.toFixed(2)}</span></div>
-                <div><strong>固有4まで育成可能な人数</strong>: <span class="result-value">${unique4Count.toFixed(2)}</span></div>
-                <div><strong>WB25まで育成可能な人数</strong>: <span class="result-value">${wb25Count.toFixed(2)}</span></div>
+                <div><strong>完全育成可能な人数</strong>: 約 <span class="result-value">${formatPeople(fullyTrainedCreditCount)}</span> 人分</div>
+                <div><strong>基準まで育成可能な人数</strong>: 約 <span class="result-value">${formatPeople(creditPeopleCount)}</span> 人</div>
+                <div><strong>レベル90可能な人数</strong>: 約 <span class="result-value">${formatPeople(level90Count)}</span> 人分</div>
+                <div><strong>スキル最大可能な人数</strong>: 約 <span class="result-value">${formatPeople(skill5MmmCount)}</span> 人分</div>
+                <div><strong>装備最大可能な人数</strong>: 約 <span class="result-value">${formatPeople(equipmentMmmCount)}</span> 人分</div>
+                <div><strong>固有4まで育成可能な人数</strong>: 約 <span class="result-value">${formatPeople(unique4Count)}</span> 人分</div>
+                <div><strong>WB25まで育成可能な人数</strong>: 約 <span class="result-value">${formatPeople(wb25Count)}</span> 人分</div>
             </div>
         `;
     }

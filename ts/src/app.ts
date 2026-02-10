@@ -38,10 +38,9 @@ class App {
                         <button class="modal-close" id="about-close" aria-label="閉じる">×</button>
                     </div>
                     <div class="modal-body">
-                        <p>助っ人計算や対抗戦順位、レポート作成の目安をまとめて扱えるツールです。</p>
-                        <p>用途に合わせて上のメニューから切り替えて使ってください。</p>
-                        <p>今後の更新で計算精度の改善や便利な補助機能を追加予定です。</p>
+                        <p>助っ人貸出回数等の計算ができる便利ツールです。</p>
                         <p>このアプリは全ての計算をデバイス上で計算し、必要なリソースの読み込み以外に外部と通信しません。</p>
+                        <p>レポート計算機のロジックの一部は<a href="https://youtu.be/-DMS9jgtXPM" target="_blank" rel="noopener noreferrer">こちら</a>の動画を参考にさせていただきました。</p>
                         <p><a href="https://github.com/neri/helper-calc" target="_blank" rel="noopener noreferrer">GitHubで表示</a></p>
                     </div>
                 </div>

@@ -21,7 +21,9 @@ export const STORAGE_KEYS = {
     REPORT_CALC_REPORT_T2: 'report-calc-report-t2',
     REPORT_CALC_REPORT_T3: 'report-calc-report-t3',
     REPORT_CALC_REPORT_T4: 'report-calc-report-t4',
-    REPORT_CALC_CREDITS: 'report-calc-credits'
+    REPORT_CALC_CREDITS: 'report-calc-credits',
+    REPORT_CALC_BASE_PEOPLE: 'report-calc-base-people',
+    REPORT_CALC_TRAIN_CREDITS: 'report-calc-train-credits'
 } as const;
 
 /**
@@ -111,5 +113,21 @@ export const StorageManager = {
 
     setReportCalcCredits(value: string): void {
         localStorage.setItem(STORAGE_KEYS.REPORT_CALC_CREDITS, value);
+    },
+
+    getReportCalcBasePeople(): string {
+        return localStorage.getItem(STORAGE_KEYS.REPORT_CALC_BASE_PEOPLE) || '5';
+    },
+
+    setReportCalcBasePeople(value: string): void {
+        localStorage.setItem(STORAGE_KEYS.REPORT_CALC_BASE_PEOPLE, value);
+    },
+
+    getReportCalcTrainCredits(): string {
+        return localStorage.getItem(STORAGE_KEYS.REPORT_CALC_TRAIN_CREDITS) || '50';
+    },
+
+    setReportCalcTrainCredits(value: string): void {
+        localStorage.setItem(STORAGE_KEYS.REPORT_CALC_TRAIN_CREDITS, value);
     }
 } as const;
