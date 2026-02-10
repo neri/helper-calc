@@ -59,9 +59,9 @@ describe('ReportCalcApp', () => {
         const resultsDiv = container.querySelector('#report-calc-results') as HTMLElement;
         expect(resultsDiv.textContent).toContain('特別依頼');
         expect(resultsDiv.textContent).toContain('レポート');
-        expect(resultsDiv.textContent).toContain('EXP: 47,050');
-        expect(resultsDiv.textContent).toContain('レベル90可能な人数: 0.04');
-        expect(resultsDiv.textContent).toContain('消費に必要なクレジット: 329,350');
+        expect(resultsDiv.textContent).toContain('合計EXP: 47,050');
+        expect(resultsDiv.textContent).toContain('レベル90可能な人数: 約 0.0 人分');
+        expect(resultsDiv.textContent).toContain('消費に必要なクレジット: 約 329,350');
     });
 
     it('特別依頼がレポート優先になる（5人未満）', () => {
@@ -85,7 +85,7 @@ describe('ReportCalcApp', () => {
         const calculateBtn = container.querySelector('#report-calc-btn') as HTMLButtonElement;
 
         reportT1.value = '124920';
-        credits.value = '200000000';
+        credits.value = '100';
         calculateBtn.click();
 
         const resultsDiv = container.querySelector('#report-calc-results') as HTMLElement;
@@ -99,7 +99,7 @@ describe('ReportCalcApp', () => {
         const calculateBtn = container.querySelector('#report-calc-btn') as HTMLButtonElement;
 
         reportT1.value = '124920';
-        credits.value = '600000000';
+        credits.value = '125';
         calculateBtn.click();
 
         const resultsDiv = container.querySelector('#report-calc-results') as HTMLElement;
