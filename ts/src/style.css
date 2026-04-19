@@ -457,3 +457,93 @@ body.dark {
 .iterations-container {
     margin-bottom: 1em;
 }
+
+/* 学園交流会計算機 */
+.scrimmage-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.scrimmage-section {
+    border: 1px solid var(--tab-label-border-color);
+    border-radius: 8px;
+    padding: 0.5rem 0.6rem;
+}
+
+.scrimmage-section-title {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+}
+
+.scrimmage-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.scrimmage-row:last-child {
+    margin-bottom: 0;
+}
+
+.scrimmage-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+}
+
+.scrimmage-cell label {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: var(--note-text-color);
+    margin-bottom: 0;
+}
+
+.scrimmage-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.95rem;
+    text-align: right;
+}
+
+@media (max-width: 360px) {
+    .scrimmage-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+.scrimmage-school {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.school-trinity {
+    color: #3d9be0;
+}
+
+.school-gehenna {
+    color: #d44040;
+}
+
+.school-millennium {
+    color: #2ea665;
+}
+
+@media (prefers-color-scheme: dark) {
+    .school-trinity {
+        color: #6bb8f4;
+    }
+
+    .school-gehenna {
+        color: #f07070;
+    }
+
+    .school-millennium {
+        color: #4fce8a;
+    }
+}

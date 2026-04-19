@@ -1,6 +1,7 @@
 import HelperCalcApp from './helper-calc-app';
 import TacticalRankCalcApp from './tactical-rank-calc-app';
 import ReportCalcApp from './report-calc-app';
+import ScrimmageCalc from './scrimmage-calc-app';
 import { SubApp } from './sub-app';
 
 class App {
@@ -27,6 +28,7 @@ class App {
                     <div class="menu-item ${initialApp === 'helper' ? 'active' : ''}" data-app="helper">助っ人貸出回数計算機</div>
                     <div class="menu-item ${initialApp === 'tactical' ? 'active' : ''}" data-app="tactical">対抗戦順位計算機</div>
                     <div class="menu-item ${initialApp === 'report' ? 'active' : ''}" data-app="report">レポート計算機</div>
+                    <div class="menu-item ${initialApp === 'scrimmage' ? 'active' : ''}" data-app="scrimmage">学園交流会計算機</div>
                     <div class="menu-item" data-action="about">このアプリについて</div>
                 </div>
             </div>
@@ -150,6 +152,9 @@ class App {
             case 'report':
                 this.currentApp = new ReportCalcApp();
                 break;
+            case 'scrimmage':
+                this.currentApp = new ScrimmageCalc();
+                break;
             default:
                 this.currentApp = new HelperCalcApp();
         }
@@ -172,6 +177,9 @@ class App {
                 case 'report':
                     titleElement.textContent = 'レポート計算機';
                     break;
+                case 'scrimmage':
+                    titleElement.textContent = '学園交流会計算機';
+                    break;
                 default:
                     titleElement.textContent = '助っ人貸出回数計算機';
             }
@@ -183,7 +191,7 @@ class App {
         if (trimmed === 'helper') {
             return 'helper';
         }
-        if (trimmed === 'tactical' || trimmed === 'report') {
+        if (trimmed === 'tactical' || trimmed === 'report' || trimmed === 'scrimmage') {
             return trimmed;
         }
         return null;
