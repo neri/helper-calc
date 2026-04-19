@@ -40,7 +40,7 @@ class App {
                         <button class="modal-close" id="about-close" aria-label="閉じる">×</button>
                     </div>
                     <div class="modal-body">
-                        <p>助っ人貸出回数等の計算ができる便利ツールです。</p>
+                        <p>計算結果は無保証です。自己責任で利用してください。</p>
                         <p>このアプリは全ての計算をデバイス上で計算し、必要なリソースの読み込み以外に外部と通信しません。</p>
                         <p>レポート計算機のロジックの一部は<a href="https://youtu.be/-DMS9jgtXPM" target="_blank" rel="noopener noreferrer">こちら</a>の動画を参考にさせていただきました。</p>
                         <p><a href="https://github.com/neri/helper-calc" target="_blank" rel="noopener noreferrer">GitHubで表示</a></p>
