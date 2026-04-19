@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
     calculateNextRank,
+    calculateNextRankCompromise,
     calculateMultipleRanks,
+    calculateMultipleRanksCompromise,
     getReward,
     calculateMinimumStoneBreak
 } from '../src/tactical-rank-calc-calculator';
@@ -103,4 +105,49 @@ describe('TacticalRankCalcCalculator', () => {
             expect(calculateMinimumStoneBreak(11)).toBe(2);
         });
     });
+
+    describe('calculateNextRankCompromise', () => {
+        it('rank > 14の場合、max(floor(論理値 * 1.1), 論理値 + 3)を計算する', () => {
+            // N=100: logical=70, compromise=max(77,73)=77
+            expect(calculateNextRankCompromise(100)).toBe(77);
+            // N=200: logical=140, compromise=max(154,143)=154
+            expect(calculateNextRankCompromise(200)).toBe(154);
+            // N=15: logical=10, compromise=max(11,13)=13
+            expect(calculateNextRankCompromise(15)).toBe(13);
+        });
+
+        it('10 < rank <= 14の場合、N - 2を計算する', () => {
+            expect(calculateNextRankCompromise(14)).toBe(12);
+            expect(calculateNextRankCompromise(13)).toBe(11);
+            expect(calculateNextRankCompromise(11)).toBe(9);
+        });
+
+        it('rank <= 10の場合、N - 1を計算する', () => {
+            expect(calculateNextRankCompromise(10)).toBe(9);
+            expect(calculateNextRankCompromise(9)).toBe(8);
+            expect(calculateNextRankCompromise(5)).toBe(4);
+        });
+
+        it('計算結果が1以下の場合は1に補正する', () => {
+            expect(calculateNextRankCompromise(1)).toBeGreaterThanOrEqual(1);
+            expect(calculateNextRankCompromise(2)).toBeGreaterThanOrEqual(1);
+        });
+    });
+
+    describe('calculateMultipleRanksCompromise', () => {
+        it('妥協値で指定回数分の順位を計算する', () => {
+            // N=100: 77 / N=77: logical=53, compromise=max(58,56)=58
+            const result = calculateMultipleRanksCompromise(100, 25);
+            expect(result[0]).toBe(77);
+            expect(result[1]).toBe(58);
+        });
+
+        it('小さい順位でのN-1を繰り返す', () => {
+            // N=9 (<=10): 8 -> 7 -> 6
+            const result = calculateMultipleRanksCompromise(9, 3);
+            expect(result).toEqual([8, 7, 6]);
+        });
+    });
+
 });
+

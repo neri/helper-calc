@@ -1,6 +1,7 @@
 import { SubApp } from './sub-app';
 import {
     calculateMultipleRanks,
+    calculateMultipleRanksCompromise,
     getReward,
     calculateMinimumStoneBreak
 } from './tactical-rank-calc-calculator';
@@ -37,7 +38,7 @@ class TacticalRankCalcApp implements SubApp {
                 <div class="iterations-container">
                     <label for="tactical-iterations-select">挑戦回数:</label>
                     <select id="tactical-iterations-select">
-                        ${Array.from({ length: 25 }, (_, i) => i + 1)
+                        ${Array.from({ length: 30 }, (_, i) => i + 1)
                 .map(i => `<option value="${i}" ${i === savedIterations ? 'selected' : ''}>${i}</option>`)
                 .join('')}
                     </select>
@@ -115,35 +116,80 @@ class TacticalRankCalcApp implements SubApp {
         errorDiv.textContent = '';
 
         const iterations = parseInt(iterationsSelect.value, 10);
-        const results = calculateMultipleRanks(rank, iterations);
 
-        // 計算結果を表示
+        if (rank > 10) {
+            // 10位より低い場合は論理値・妥協値の2種類を表示
+            const logicalResults = calculateMultipleRanks(rank, iterations);
+            const compromiseResults = calculateMultipleRanksCompromise(rank, iterations);
+
+            const currentReward = getReward(rank);
+            const currentRewardHTML = `<div><strong>現在の報酬見込</strong>: <span class="result-value">石${currentReward.stone} コイン${currentReward.coin}</span></div>`;
+
+            resultsDiv.innerHTML =
+                currentRewardHTML +
+                this.buildResultSection(rank, logicalResults, '論理値の場合') +
+                this.buildResultSection(rank, compromiseResults, '妥協値の場合');
+            rewardsDiv.innerHTML = '';
+            stoneCalcDiv.innerHTML = '';
+        } else {
+            const results = calculateMultipleRanks(rank, iterations);
+
+            // 10位以下は論理値のみで計算結果を表示
+            const resultsHTML = results
+                .map((r, i) => `<div><strong>${i + 1}回目</strong>：<span class="result-value">${r}位</span></div>`)
+                .join('');
+            resultsDiv.innerHTML = resultsHTML;
+
+            // 報酬を計算して表示
+            const currentReward = getReward(rank);
+            const finalRank = results[results.length - 1];
+            const finalReward = getReward(finalRank);
+
+            let rewardsHTML = `<div><strong>現在の報酬見込</strong>: <span class="result-value">石${currentReward.stone} コイン${currentReward.coin}</span></div>`;
+            if (finalRank !== rank) {
+                rewardsHTML += `<div><strong>最終報酬見込</strong>: <span class="result-value">石${finalReward.stone} コイン${finalReward.coin}</span></div>`;
+            }
+            rewardsDiv.innerHTML = rewardsHTML;
+
+            // 石割り計算を表示
+            const actualIterations = results.length;
+            const minStoneBreak = calculateMinimumStoneBreak(actualIterations);
+
+            let stoneCalcHTML = '';
+            if (minStoneBreak > 0) {
+                const stoneCount = minStoneBreak * 60;
+                stoneCalcHTML = `<div><strong>最低石割り</strong>：<span class="result-value">${minStoneBreak}回 ${stoneCount}個</span></div>`;
+            }
+            stoneCalcDiv.innerHTML = stoneCalcHTML;
+        }
+    }
+
+    private buildResultSection(rank: number, results: number[], label: string): string {
         const resultsHTML = results
             .map((r, i) => `<div><strong>${i + 1}回目</strong>：<span class="result-value">${r}位</span></div>`)
             .join('');
-        resultsDiv.innerHTML = resultsHTML;
 
-        // 報酬を計算して表示
-        const currentReward = getReward(rank);
         const finalRank = results[results.length - 1];
         const finalReward = getReward(finalRank);
 
-        let rewardsHTML = `<div><strong>現在の報酬見込</strong>: <span class="result-value">石${currentReward.stone} コイン${currentReward.coin}</span></div>`;
+        let rewardsHTML = '';
         if (finalRank !== rank) {
-            rewardsHTML += `<div><strong>最終報酬見込</strong>: <span class="result-value">石${finalReward.stone} コイン${finalReward.coin}</span></div>`;
+            rewardsHTML = `<div><strong>最終報酬見込</strong>: <span class="result-value">石${finalReward.stone} コイン${finalReward.coin}</span></div>`;
         }
-        rewardsDiv.innerHTML = rewardsHTML;
 
-        // 石割り計算を表示
-        const actualIterations = results.length;
-        const minStoneBreak = calculateMinimumStoneBreak(actualIterations);
-
+        const minStoneBreak = calculateMinimumStoneBreak(results.length);
         let stoneCalcHTML = '';
         if (minStoneBreak > 0) {
             const stoneCount = minStoneBreak * 60;
             stoneCalcHTML = `<div><strong>最低石割り</strong>：<span class="result-value">${minStoneBreak}回 ${stoneCount}個</span></div>`;
         }
-        stoneCalcDiv.innerHTML = stoneCalcHTML;
+
+        return `<div class="result-section">
+            <div class="result-section-label">${label}</div>
+            ${resultsHTML}
+            ${rewardsHTML}
+            ${stoneCalcHTML}
+        </div>`;
     }
 }
 

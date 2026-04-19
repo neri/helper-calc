@@ -84,6 +84,49 @@ export function getReward(rank: number): Reward {
 }
 
 /**
+ * 妥協値で次の順位を計算する (rank<=10: N-1, rank<=14: N-2, その他: max(floor(論理値 * 1.1), 論理値 + 3))
+ * @param currentRank 現在の順位
+ * @returns 次の順位
+ */
+export function calculateNextRankCompromise(currentRank: number): number {
+    let nextRank: number;
+    if (currentRank <= 10) {
+        nextRank = currentRank - 1;
+    } else if (currentRank <= 14) {
+        nextRank = currentRank - 2;
+    } else {
+        const logical = calculateNextRank(currentRank);
+        nextRank = Math.max(
+            Math.floor((logical * 11) / 10),
+            logical + 3
+        );
+    }
+    return Math.max(1, nextRank);
+}
+
+/**
+ * 妥協値で複数の順位を計算する（1位が出たら打ち切り）
+ * @param initialRank 初期順位
+ * @param iterations 繰り返し回数
+ * @returns 順位の配列
+ */
+export function calculateMultipleRanksCompromise(initialRank: number, iterations: number): number[] {
+    const results: number[] = [];
+    let currentRank = initialRank;
+
+    for (let i = 0; i < iterations; i++) {
+        currentRank = calculateNextRankCompromise(currentRank);
+        results.push(currentRank);
+
+        if (currentRank === 1) {
+            break;
+        }
+    }
+
+    return results;
+}
+
+/**
  * 最低石割り回数を計算する
  * @param actualIterations 実際に繰り返した回数
  * @returns 最低石割り回数

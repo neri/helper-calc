@@ -385,6 +385,19 @@ select {
     font-weight: 300;
 }
 
+.result-section {
+    margin-bottom: 1.2rem;
+    padding: 0.6rem 0.8rem;
+    border-left: 3px solid var(--link-color);
+}
+
+.result-section-label {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+    font-size: 0.95em;
+    opacity: 0.8;
+}
+
 .result-loans {
     font-size: 1.5em;
     color: var(--link-color);
