@@ -84,7 +84,15 @@ export function getReward(rank: number): Reward {
 }
 
 /**
- * 妥協値で次の順位を計算する (rank<=10: N-1, rank<=14: N-2, その他: max(floor(論理値 * 1.1), 論理値 + 3))
+ * 妥協値で次の順位を計算する。
+ *
+ * 序盤は論理値の相手とマッチングしにくいため、現在順位に応じて余裕を設ける。
+ * ただし、一律の余裕では昇格が遅くなるため、順位が上がるほど余裕を小さくする。
+ * - rank > 8000: 論理値の 5%
+ * - 2000 < rank <= 8000: 論理値の 3%
+ * - 14 < rank <= 2000: 論理値の 1%
+ *
+ * いずれも最低 +3 位の余裕を確保する。rank<=10: N-1、rank<=14: N-2。
  * @param currentRank 現在の順位
  * @returns 次の順位
  */
@@ -96,8 +104,13 @@ export function calculateNextRankCompromise(currentRank: number): number {
         nextRank = currentRank - 2;
     } else {
         const logical = calculateNextRank(currentRank);
+        const marginPercent = currentRank > 8000
+            ? 5
+            : currentRank > 2000
+                ? 3
+                : 1;
         nextRank = Math.max(
-            Math.floor((logical * 11) / 10),
+            Math.floor((logical * (100 + marginPercent)) / 100),
             logical + 3
         );
     }

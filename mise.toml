@@ -11,6 +11,10 @@ description = "Run the test"
 run = "(cd ts; pnpm i; pnpm test)"
 
 [tasks.update]
-confirm = "Are you ok?"
 description = "Update dependencies"
 run = "(cd ts; pnpm update)"
+
+[tasks.clean]
+confirm = "Are you ok?"
+description = "Clean the build"
+run = "rm -rf node_modules ts/node_modules ts/dist"

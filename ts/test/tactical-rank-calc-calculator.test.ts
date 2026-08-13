@@ -107,12 +107,16 @@ describe('TacticalRankCalcCalculator', () => {
     });
 
     describe('calculateNextRankCompromise', () => {
-        it('rank > 14の場合、max(floor(論理値 * 1.1), 論理値 + 3)を計算する', () => {
-            // N=100: logical=70, compromise=max(77,73)=77
-            expect(calculateNextRankCompromise(100)).toBe(77);
-            // N=200: logical=140, compromise=max(154,143)=154
-            expect(calculateNextRankCompromise(200)).toBe(154);
-            // N=15: logical=10, compromise=max(11,13)=13
+        it('現在順位に応じて妥協幅を縮め、最低+3位を確保する', () => {
+            // N=15001: logical=10500、5%の余裕で11025
+            expect(calculateNextRankCompromise(15001)).toBe(11025);
+            // N=8000: logical=5600、3%の余裕で5768
+            expect(calculateNextRankCompromise(8000)).toBe(5768);
+            // N=2000: logical=1400、1%の余裕で1414
+            expect(calculateNextRankCompromise(2000)).toBe(1414);
+            // N=100: 1%より最低+3位の余裕が優先される
+            expect(calculateNextRankCompromise(100)).toBe(73);
+            // N=15: logical=10、最低+3位の余裕で13
             expect(calculateNextRankCompromise(15)).toBe(13);
         });
 
@@ -136,10 +140,10 @@ describe('TacticalRankCalcCalculator', () => {
 
     describe('calculateMultipleRanksCompromise', () => {
         it('妥協値で指定回数分の順位を計算する', () => {
-            // N=100: 77 / N=77: logical=53, compromise=max(58,56)=58
+            // N=100: 73 / N=73: logical=51, compromise=54
             const result = calculateMultipleRanksCompromise(100, 25);
-            expect(result[0]).toBe(77);
-            expect(result[1]).toBe(58);
+            expect(result[0]).toBe(73);
+            expect(result[1]).toBe(54);
         });
 
         it('小さい順位でのN-1を繰り返す', () => {
@@ -150,4 +154,3 @@ describe('TacticalRankCalcCalculator', () => {
     });
 
 });
-
